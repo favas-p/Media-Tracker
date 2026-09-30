@@ -69,7 +69,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-[#F4F5FA] dark:bg-[#07022E] text-slate-900 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200 relative">
       <PWAInstallPrompt />
       {/* Top Header Navigation Bar */}
-      <header className="sticky top-0 z-40 bg-transparent px-4 lg:px-8 py-3 transition-colors">
+      <header className="sticky top-0 z-40 bg-slate-100/80 dark:bg-[#07022E]/60 backdrop-blur-md px-4 lg:px-8 py-3 transition-colors">
         <div className="max-w-[1500px] mx-auto flex items-center justify-between gap-4">
           {/* Brand Logo & Tagline */}
           <Link href="/dashboard" className="flex items-center gap-3 group flex-shrink-0">
@@ -124,11 +124,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
             {/* Notification Bell */}
             <button
-              className="relative p-2 rounded-full border border-slate-200 dark:border-blue-900/40 bg-white dark:bg-[#12095C] text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-[#1A0D85] transition-colors shadow-sm"
+              className="relative p-2 rounded-full border border-slate-200 dark:border-blue-900/40 bg-white dark:bg-[#0D0647] text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#150B6E] transition-colors shadow-sm"
               title="Notifications"
             >
               <Bell className="w-4 h-4" />
-              <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-[#2511F7] text-[#FFE600] text-[9px] font-bold flex items-center justify-center ring-2 ring-white dark:ring-[#07022E]">
+              <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-[#2511F7] text-[#FFE600] text-[9px] font-bold flex items-center justify-center ring-2 ring-white dark:ring-[#0D0647]">
                 3
               </span>
             </button>
@@ -136,7 +136,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             {/* Dark Mode Toggle */}
             <button
               onClick={toggleDarkMode}
-              className="p-2 rounded-full border border-slate-200 dark:border-blue-900/40 bg-white dark:bg-[#12095C] text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-[#1A0D85] transition-colors shadow-sm"
+              className="p-2 rounded-full border border-slate-200 dark:border-blue-900/40 bg-white dark:bg-[#0D0647] text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#150B6E] transition-colors shadow-sm"
               title="Toggle Theme"
             >
               {isDarkMode ? <Sun className="w-4 h-4 text-[#FFE600]" /> : <Moon className="w-4 h-4 text-slate-600" />}
@@ -162,7 +162,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl border border-slate-200 dark:border-blue-900/40 bg-white dark:bg-[#12095C] text-slate-700 dark:text-slate-200"
+              className="lg:hidden p-2 rounded-xl border border-slate-200 dark:border-blue-900/40 bg-white dark:bg-[#0D0647] text-slate-700 dark:text-slate-200"
             >
               {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -180,7 +180,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 className={`block px-4 py-2 rounded-xl text-sm font-semibold ${
                   pathname === item.href
                     ? 'bg-[#2511F7] text-white'
-                    : 'text-slate-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/40'
+                    : 'text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-blue-900/40'
                 }`}
               >
                 {item.name}
