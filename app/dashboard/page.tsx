@@ -31,8 +31,14 @@ import {
   Share2,
   AlertTriangle,
   FolderCheck,
+  Gamepad2,
+  Trophy,
+  Sparkles,
+  X,
 } from 'lucide-react';
 import { format } from 'date-fns';
+import { SnakeVsBlockGame } from '@/components/game/SnakeVsBlockGame';
+import { TeamLeaderboard } from '@/components/game/TeamLeaderboard';
 
 async function getDashboardData() {
   try {
@@ -53,9 +59,18 @@ export default function DashboardPage() {
     queryFn: getDashboardData,
   });
 
-  // Time Tracker state
+  // Time Tracker & Relax Zone Game state
   const [isTimerRunning, setIsTimerRunning] = useState(false);
   const [seconds, setSeconds] = useState(155); // 02:35 initial
+  const [highScore, setHighScore] = useState<number>(0);
+  const [isGameModalOpen, setIsGameModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('nusa_snake_highscore');
+      if (saved) setHighScore(parseInt(saved, 10));
+    }
+  }, [isGameModalOpen]);
 
   useEffect(() => {
     let timer: any;
@@ -467,68 +482,78 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {/* Card 2: Time Tracker */}
-            <div className="bg-white dark:bg-[#0D0647] rounded-[28px] p-5 shadow-sm border border-slate-100 dark:border-blue-900/40 flex flex-col justify-between">
-              <div className="flex items-center justify-between">
-                <h3 className="text-xs font-bold text-slate-800 dark:text-slate-200">
-                  Time Tracker
-                </h3>
-                <button className="text-slate-400 hover:text-[#2511F7]">
-                  <ArrowUpRight className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* Circular Timer Ring */}
-              <div className="my-3 flex flex-col items-center justify-center">
-                <div className="relative w-24 h-24 flex items-center justify-center">
-                  <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                    <path
-                      className="text-slate-100 dark:text-blue-950"
-                      strokeWidth="3.5"
-                      stroke="currentColor"
-                      fill="none"
-                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                    />
-                    <path
-                      className="text-[#2511F7]"
-                      strokeDasharray="75, 100"
-                      strokeWidth="3.5"
-                      strokeLinecap="round"
-                      stroke="currentColor"
-                      fill="none"
-                      d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                    <span className="text-sm font-black text-slate-900 dark:text-white leading-tight">
-                      {formatTimer(seconds)}
-                    </span>
-                    <span className="text-[9px] font-semibold text-slate-400">
-                      Work Time
-                    </span>
-                  </div>
+            {/* Card 2: Team Relax Zone (Snake vs Block) */}
+            <div className="bg-white dark:bg-[#0D0647] rounded-[28px] p-5 shadow-sm border border-slate-100 dark:border-blue-900/40 flex flex-col justify-between relative overflow-hidden group">
+              {/* Header Info & Icon-Only Play Button */}
+              <div className="flex items-center justify-between z-10">
+                <div className="flex items-center gap-1.5">
+                  <Gamepad2 className="w-4 h-4 text-[#2511F7] dark:text-[#FFE600]" />
+                  <h3 className="text-xs font-bold text-slate-800 dark:text-slate-200 tracking-wide">
+                    Team Relax Zone
+                  </h3>
                 </div>
+                
+                <button
+                  onClick={() => setIsGameModalOpen(true)}
+                  className="h-9 w-9 rounded-full bg-[#2511F7] hover:bg-[#1C0BD9] text-white shadow-md shadow-blue-600/30 transition-all hover:scale-110 active:scale-95 flex items-center justify-center flex-shrink-0"
+                  title="Play Snake Game"
+                >
+                  <Play className="w-4 h-4 fill-current text-[#FFE600] ml-0.5" />
+                </button>
               </div>
 
-              {/* Controls */}
-              <div className="flex items-center justify-center gap-2 pt-1">
-                <button
-                  onClick={() => setIsTimerRunning(!isTimerRunning)}
-                  className="h-8 w-8 rounded-full border border-slate-200 dark:border-blue-900/40 bg-white dark:bg-[#150B6E] text-slate-700 dark:text-slate-200 flex items-center justify-center hover:bg-blue-50 transition-colors shadow-sm"
+              {/* Moving Animated Snake Preview */}
+              <div 
+                onClick={() => setIsGameModalOpen(true)}
+                className="relative mt-3 w-full h-28 bg-slate-50/80 dark:bg-[#07022E]/60 rounded-2xl border border-slate-100 dark:border-blue-900/30 overflow-hidden flex items-center justify-center cursor-pointer group-hover:border-blue-300 dark:group-hover:border-blue-700/50 transition-colors"
+              >
+                {/* Floating Obstacle Mini Blocks */}
+                <motion.div
+                  animate={{ y: [0, -6, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                  className="absolute left-6 top-3 w-8 h-8 rounded-xl bg-emerald-500 text-white font-black text-[10px] flex items-center justify-center shadow-md shadow-emerald-500/20"
                 >
-                  {isTimerRunning ? (
-                    <Pause className="w-3.5 h-3.5 text-[#2511F7]" />
-                  ) : (
-                    <Play className="w-3.5 h-3.5 text-slate-700 dark:text-slate-200 ml-0.5" />
-                  )}
-                </button>
-                <button
-                  onClick={() => setSeconds(0)}
-                  className="h-8 w-8 rounded-full border border-slate-200 dark:border-blue-900/40 bg-white dark:bg-[#150B6E] text-slate-700 dark:text-slate-200 flex items-center justify-center hover:bg-blue-50 transition-colors shadow-sm"
-                  title="Reset Timer"
+                  5
+                </motion.div>
+
+                <motion.div
+                  animate={{ y: [0, 6, 0] }}
+                  transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+                  className="absolute right-8 top-4 w-8 h-8 rounded-xl bg-amber-500 text-white font-black text-[10px] flex items-center justify-center shadow-md shadow-amber-500/20"
                 >
-                  <Clock className="w-3.5 h-3.5 text-slate-500" />
-                </button>
+                  12
+                </motion.div>
+
+                {/* Moving Slithering Snake */}
+                <div className="relative flex items-center gap-1 z-10">
+                  {[0, 1, 2, 3, 4].map((index) => (
+                    <motion.div
+                      key={index}
+                      animate={{
+                        y: [0, -8, 0, 8, 0],
+                        x: [0, 5, 0, -5, 0],
+                      }}
+                      transition={{
+                        duration: 2.2,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                        delay: index * 0.12,
+                      }}
+                      className={`rounded-full flex items-center justify-center shadow-sm ${
+                        index === 0
+                          ? 'h-6 w-6 bg-[#FFE600] border-2 border-[#2511F7] z-10 shadow-amber-400/40'
+                          : 'h-4 w-4 bg-[#FFE600] border border-[#2511F7]'
+                      }`}
+                    >
+                      {index === 0 && (
+                        <div className="flex gap-0.5">
+                          <span className="h-1 w-1 rounded-full bg-[#0A043D]" />
+                          <span className="h-1 w-1 rounded-full bg-[#0A043D]" />
+                        </div>
+                      )}
+                    </motion.div>
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -727,6 +752,33 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+      {/* Game Modal Overlay on Dashboard */}
+      {isGameModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200">
+          <div className="relative w-full max-w-2xl bg-white dark:bg-[#0D0647] border border-slate-200 dark:border-blue-900/50 rounded-[32px] p-4 sm:p-6 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-blue-900/40 pb-3">
+              <div className="flex items-center gap-2">
+                <Gamepad2 className="w-5 h-5 text-[#2511F7] dark:text-[#FFE600]" />
+                <h2 className="text-base sm:text-lg font-black text-slate-900 dark:text-white">
+                  Team Relax Zone - Snake vs Block
+                </h2>
+              </div>
+              <button
+                onClick={() => setIsGameModalOpen(false)}
+                className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors"
+                title="Close Game Modal"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <SnakeVsBlockGame />
+            <div className="pt-4 border-t border-slate-100 dark:border-blue-900/40">
+              <TeamLeaderboard />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

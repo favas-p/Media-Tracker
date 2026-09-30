@@ -19,6 +19,7 @@ import {
   Menu,
   X,
   Sparkles,
+  Gamepad2,
 } from 'lucide-react';
 import { isAdminRole } from '@/lib/auth-utils';
 import PWAInstallPrompt from '@/components/ui/PWAInstallPrompt';
@@ -53,6 +54,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     { name: 'My Works', href: '/my-works' },
     ...(isAdmin ? [{ name: 'Members', href: '/members' }] : []),
     { name: 'Profile', href: '/profile' },
+    { name: 'Relax Zone', href: '/game' },
   ];
 
   // Don't render shell on /login or root landing page

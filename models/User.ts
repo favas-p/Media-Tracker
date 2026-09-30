@@ -11,6 +11,7 @@ export interface IUser extends Document {
   role: UserRole;
   avatarUrl?: string;
   isActive: boolean;
+  gameHighScore?: number;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -56,6 +57,10 @@ const UserSchema = new Schema<IUser>(
     isActive: {
       type: Boolean,
       default: true,
+    },
+    gameHighScore: {
+      type: Number,
+      default: 0,
     },
   },
   {
