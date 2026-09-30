@@ -24,8 +24,9 @@ import {
   AlertCircle,
   PlayCircle,
   AlertTriangle,
+  ListChecks,
 } from 'lucide-react';
-import { fetchWorkById, updateWorkStatus, deleteWork, addWorkComment } from '@/services/work';
+import { fetchWorkById, updateWorkStatus, updateSubtaskStatus, deleteWork, addWorkComment } from '@/services/work';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { CategoryBadge } from '@/components/ui/CategoryBadge';
 import { PriorityBadge } from '@/components/ui/PriorityBadge';
@@ -69,6 +70,20 @@ export default function WorkDetailsPage() {
     },
     onError: (err: Error) => {
       setErrorMessage(err.message || 'Failed to change status');
+    },
+  });
+
+  // Subtask Status Mutation
+  const subtaskMutation = useMutation({
+    mutationFn: ({ subtaskId, status }: { subtaskId: string; status: WorkStatus }) =>
+      updateSubtaskStatus(id, subtaskId, status),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['work', id] });
+      queryClient.invalidateQueries({ queryKey: ['works'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+    },
+    onError: (err: Error) => {
+      setErrorMessage(err.message || 'Failed to update program step status');
     },
   });
 
@@ -275,6 +290,145 @@ export default function WorkDetailsPage() {
           </div>
         )}
       </div>
+
+      {/* Program Workflow / Addon Works Steps */}
+      {work.subtasks && work.subtasks.length > 0 && (
+        <div className="bg-white dark:bg-[#151233] border border-slate-100 dark:border-slate-800/80 rounded-[28px] p-6 sm:p-8 shadow-sm space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
+            <div>
+              <div className="flex items-center gap-2">
+                <ListChecks className="w-5 h-5 text-primary-500" />
+                <h3 className="text-lg font-extrabold text-[#1E1B4B] dark:text-white">
+                  Program Workflow & Addon Works
+                </h3>
+              </div>
+              <p className="text-xs text-slate-400 mt-1">
+                Sequential program steps and assigned members for this work.
+              </p>
+            </div>
+
+            {/* Overall Step Progress Bar */}
+            <div className="flex items-center gap-3">
+              <div className="text-right">
+                <span className="text-xs font-bold text-slate-700 dark:text-slate-300">
+                  {work.subtasks.filter((st) => st.status === 'completed').length} / {work.subtasks.length} Done
+                </span>
+                <p className="text-[10px] text-slate-400">
+                  {Math.round(
+                    (work.subtasks.filter((st) => st.status === 'completed').length / work.subtasks.length) * 100
+                  )}% Completed
+                </p>
+              </div>
+              <div className="w-24 h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-emerald-500 transition-all duration-500"
+                  style={{
+                    width: `${
+                      (work.subtasks.filter((st) => st.status === 'completed').length / work.subtasks.length) * 100
+                    }%`,
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Subtask Step Cards */}
+          <div className="space-y-3">
+            {work.subtasks.map((st, index) => {
+              const canUserUpdateThisStep =
+                isAdmin || isAssigned || (st.assignedTo && st.assignedTo.id === session?.user?.id);
+
+              return (
+                <div
+                  key={st.id}
+                  className={`p-4 rounded-2xl border transition-all flex flex-col md:flex-row md:items-center justify-between gap-4 ${
+                    st.status === 'completed'
+                      ? 'bg-emerald-50 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-800/40'
+                      : st.status === 'in_progress'
+                      ? 'bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-800/40'
+                      : 'bg-[#F8F9FD] dark:bg-[#1E1A3D] border-slate-200 dark:border-slate-700/60'
+                  }`}
+                >
+                  {/* Step Number & Info */}
+                  <div className="flex items-start gap-3.5">
+                    <span
+                      className={`h-8 w-8 rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0 ${
+                        st.status === 'completed'
+                          ? 'bg-emerald-500 text-white'
+                          : st.status === 'in_progress'
+                          ? 'bg-amber-500 text-white'
+                          : 'bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300'
+                      }`}
+                    >
+                      {index + 1}
+                    </span>
+
+                    <div className="space-y-1">
+                      <h4
+                        className={`text-sm font-bold ${
+                          st.status === 'completed'
+                            ? 'line-through text-slate-500 dark:text-slate-400'
+                            : 'text-slate-900 dark:text-white'
+                        }`}
+                      >
+                        {st.title}
+                      </h4>
+
+                      {/* Assigned Member Tag */}
+                      <div className="flex items-center gap-2 pt-1 text-xs">
+                        <span className="text-slate-400 font-medium">Assigned Member:</span>
+                        {st.assignedTo ? (
+                          <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+                            <img
+                              src={
+                                st.assignedTo.avatarUrl ||
+                                `https://api.dicebear.com/7.x/avataaars/svg?seed=${st.assignedTo.name}`
+                              }
+                              alt={st.assignedTo.name}
+                              className="h-4 w-4 rounded-full"
+                            />
+                            <span className="font-semibold text-slate-700 dark:text-slate-200 text-[11px]">
+                              {st.assignedTo.name}
+                            </span>
+                          </div>
+                        ) : (
+                          <span className="text-slate-400 italic text-[11px]">All Work Assignees</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Status Badges & Quick Action Controls */}
+                  <div className="flex items-center gap-3 flex-shrink-0 self-end md:self-center">
+                    <StatusBadge status={st.status} />
+
+                    {canUserUpdateThisStep && (
+                      <div className="flex items-center gap-1">
+                        {(['pending', 'in_progress', 'completed'] as WorkStatus[]).map((stStatus) => (
+                          <button
+                            key={stStatus}
+                            onClick={() =>
+                              subtaskMutation.mutate({ subtaskId: st.id, status: stStatus })
+                            }
+                            disabled={st.status === stStatus || subtaskMutation.isPending}
+                            className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold capitalize transition-all ${
+                              st.status === stStatus
+                                ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-sm'
+                                : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:border-primary-500'
+                            }`}
+                          >
+                            {stStatus === 'in_progress' ? 'In Progress' : stStatus}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Grid Split: Assignees & Attachments */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

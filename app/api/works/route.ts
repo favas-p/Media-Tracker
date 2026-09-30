@@ -44,6 +44,7 @@ export async function GET(req: NextRequest) {
 
     const works = await Work.find(filter)
       .populate('assignedTo', 'name email avatarUrl role isActive')
+      .populate('subtasks.assignedTo', 'name email avatarUrl role')
       .populate('createdBy', 'name email avatarUrl role')
       .populate('completedBy', 'name email avatarUrl role')
       .sort({ createdAt: -1 })
@@ -64,6 +65,21 @@ export async function GET(req: NextRequest) {
         role: u.role,
         avatarUrl: u.avatarUrl || '',
         isActive: u.isActive,
+      })),
+      subtasks: (w.subtasks || []).map((st: any) => ({
+        id: st._id ? st._id.toString() : '',
+        title: st.title,
+        assignedTo: st.assignedTo
+          ? {
+              id: (st.assignedTo as any)._id.toString(),
+              name: (st.assignedTo as any).name,
+              email: (st.assignedTo as any).email,
+              role: (st.assignedTo as any).role,
+              avatarUrl: (st.assignedTo as any).avatarUrl || '',
+            }
+          : null,
+        status: st.status,
+        completedAt: st.completedAt ? st.completedAt.toISOString() : null,
       })),
       createdBy: w.createdBy
         ? {
@@ -117,10 +133,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { title, description, category, priority, deadline, assignedTo, attachments } =
+    const { title, description, category, priority, deadline, assignedTo, subtasks, attachments } =
       validation.data;
 
     await connectToDatabase();
+
+    const formattedSubtasks = (subtasks || []).map((st) => ({
+      title: st.title,
+      assignedTo: st.assignedTo || null,
+      status: st.status || 'pending',
+    }));
 
     const newWork = await Work.create({
       title,
@@ -130,6 +152,7 @@ export async function POST(req: NextRequest) {
       deadline: new Date(deadline),
       status: 'pending',
       assignedTo,
+      subtasks: formattedSubtasks,
       createdBy: admin.id,
       attachments: attachments || [],
     });
@@ -144,6 +167,7 @@ export async function POST(req: NextRequest) {
 
     const populatedWork = await Work.findById(newWork._id)
       .populate('assignedTo', 'name email avatarUrl role isActive')
+      .populate('subtasks.assignedTo', 'name email avatarUrl role')
       .populate('createdBy', 'name email avatarUrl role')
       .lean();
 
@@ -165,6 +189,21 @@ export async function POST(req: NextRequest) {
             role: u.role,
             avatarUrl: u.avatarUrl || '',
             isActive: u.isActive,
+          })),
+          subtasks: (populatedWork!.subtasks || []).map((st: any) => ({
+            id: st._id ? st._id.toString() : '',
+            title: st.title,
+            assignedTo: st.assignedTo
+              ? {
+                  id: (st.assignedTo as any)._id.toString(),
+                  name: (st.assignedTo as any).name,
+                  email: (st.assignedTo as any).email,
+                  role: (st.assignedTo as any).role,
+                  avatarUrl: (st.assignedTo as any).avatarUrl || '',
+                }
+              : null,
+            status: st.status,
+            completedAt: st.completedAt ? st.completedAt.toISOString() : null,
           })),
           createdBy: {
             id: (populatedWork!.createdBy as any)._id.toString(),

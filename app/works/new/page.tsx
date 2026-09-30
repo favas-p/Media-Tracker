@@ -36,6 +36,12 @@ export default function NewWorkPage() {
   const [priority, setPriority] = useState<WorkPriority>('medium');
   const [deadline, setDeadline] = useState('');
   const [selectedAssignees, setSelectedAssignees] = useState<string[]>([]);
+  const [subtasks, setSubtasks] = useState<{ title: string; assignedTo: string }[]>([
+    { title: '1. Program Poster Design', assignedTo: '' },
+    { title: '2. Video Shoot', assignedTo: '' },
+    { title: '3. Video Editing', assignedTo: '' },
+    { title: '4. Photo Framing', assignedTo: '' },
+  ]);
   const [attachmentUrl, setAttachmentUrl] = useState('');
   const [attachments, setAttachments] = useState<string[]>([]);
 
@@ -65,6 +71,22 @@ export default function NewWorkPage() {
     );
   };
 
+  const handleAddSubtask = () => {
+    setSubtasks((prev) => [...prev, { title: `${prev.length + 1}. `, assignedTo: '' }]);
+  };
+
+  const handleRemoveSubtask = (index: number) => {
+    setSubtasks((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleSubtaskChange = (index: number, field: 'title' | 'assignedTo', value: string) => {
+    setSubtasks((prev) => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], [field]: value };
+      return updated;
+    });
+  };
+
   const handleAddAttachment = () => {
     if (!attachmentUrl.trim()) return;
     try {
@@ -85,6 +107,14 @@ export default function NewWorkPage() {
     e.preventDefault();
     setError(null);
 
+    const validSubtasks = subtasks
+      .filter((st) => st.title.trim().length > 0)
+      .map((st) => ({
+        title: st.title.trim(),
+        assignedTo: st.assignedTo || undefined,
+        status: 'pending' as const,
+      }));
+
     const payload = {
       title: title.trim(),
       description: description.trim(),
@@ -92,6 +122,7 @@ export default function NewWorkPage() {
       priority,
       deadline,
       assignedTo: selectedAssignees,
+      subtasks: validSubtasks,
       attachments,
     };
 
@@ -291,6 +322,70 @@ export default function NewWorkPage() {
               })}
             </div>
           )}
+        </div>
+
+        {/* Program Workflow Steps (Addon Works) Section */}
+        <div className="space-y-3 pt-2">
+          <div className="flex items-center justify-between">
+            <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+              <Kanban className="w-4 h-4 text-[#2511F7] dark:text-[#FFE600]" />
+              Program Workflow & Addon Works (Ordered Steps)
+            </label>
+            <button
+              type="button"
+              onClick={handleAddSubtask}
+              className="text-xs font-bold text-[#2511F7] dark:text-[#FFE600] hover:underline flex items-center gap-1"
+            >
+              <Plus className="w-3.5 h-3.5" /> Add Program Step
+            </button>
+          </div>
+
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            Set up ordered program steps (e.g., 1. Poster, 2. Video Shoot, 3. Video Editing) and assign specific members to each step.
+          </p>
+
+          <div className="space-y-2.5">
+            {subtasks.map((st, idx) => (
+              <div
+                key={idx}
+                className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 p-3 rounded-2xl bg-[#F4F6FF] dark:bg-[#150B6E] border border-slate-200 dark:border-blue-900/40"
+              >
+                <span className="h-6 w-6 rounded-full bg-[#2511F7] text-[#FFE600] font-black text-[10px] flex items-center justify-center flex-shrink-0">
+                  {idx + 1}
+                </span>
+
+                <input
+                  type="text"
+                  value={st.title}
+                  onChange={(e) => handleSubtaskChange(idx, 'title', e.target.value)}
+                  placeholder={`Step ${idx + 1} Title (e.g. Video Shoot, Photo Framing...)`}
+                  className="flex-1 bg-white dark:bg-[#0D0647] border border-slate-200 dark:border-blue-900/40 rounded-xl px-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-[#2511F7]"
+                />
+
+                <select
+                  value={st.assignedTo}
+                  onChange={(e) => handleSubtaskChange(idx, 'assignedTo', e.target.value)}
+                  className="bg-white dark:bg-[#0D0647] border border-slate-200 dark:border-blue-900/40 rounded-xl px-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-[#2511F7]"
+                >
+                  <option value="">-- Assign Member --</option>
+                  {members?.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.name} ({m.role})
+                    </option>
+                  ))}
+                </select>
+
+                <button
+                  type="button"
+                  onClick={() => handleRemoveSubtask(idx)}
+                  className="p-2 text-rose-500 hover:text-rose-600 rounded-xl hover:bg-rose-500/10 transition-colors flex-shrink-0 self-end sm:self-auto"
+                  title="Remove Step"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Attachments Section */}

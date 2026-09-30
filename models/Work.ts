@@ -12,6 +12,14 @@ export type WorkCategory =
 export type WorkPriority = 'low' | 'medium' | 'high';
 export type WorkStatus = 'pending' | 'in_progress' | 'completed';
 
+export interface ISubTask {
+  _id?: mongoose.Types.ObjectId;
+  title: string;
+  assignedTo?: mongoose.Types.ObjectId;
+  status: WorkStatus;
+  completedAt?: Date;
+}
+
 export interface IWork extends Document {
   _id: mongoose.Types.ObjectId;
   title: string;
@@ -21,6 +29,7 @@ export interface IWork extends Document {
   deadline: Date;
   status: WorkStatus;
   assignedTo: mongoose.Types.ObjectId[];
+  subtasks: ISubTask[];
   createdBy: mongoose.Types.ObjectId;
   completedAt?: Date;
   completedBy?: mongoose.Types.ObjectId;
@@ -28,6 +37,32 @@ export interface IWork extends Document {
   createdAt: Date;
   updatedAt: Date;
 }
+
+const SubTaskSchema = new Schema<ISubTask>(
+  {
+    title: {
+      type: String,
+      required: [true, 'Subtask title is required'],
+      trim: true,
+    },
+    assignedTo: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    status: {
+      type: String,
+      enum: ['pending', 'in_progress', 'completed'],
+      default: 'pending',
+      required: true,
+    },
+    completedAt: {
+      type: Date,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
 const WorkSchema = new Schema<IWork>(
   {
@@ -75,6 +110,7 @@ const WorkSchema = new Schema<IWork>(
         index: true,
       },
     ],
+    subtasks: [SubTaskSchema],
     createdBy: {
       type: Schema.Types.ObjectId,
       ref: 'User',

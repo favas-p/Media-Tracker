@@ -25,6 +25,7 @@ import { StatusBadge } from '@/components/ui/StatusBadge';
 import { CategoryBadge } from '@/components/ui/CategoryBadge';
 import { PriorityBadge } from '@/components/ui/PriorityBadge';
 import { AvatarGroup } from '@/components/ui/AvatarGroup';
+import { WorkStepLevelBar } from '@/components/ui/WorkStepLevelBar';
 import { isAdminRole } from '@/lib/auth-utils';
 import { format } from 'date-fns';
 
@@ -291,6 +292,9 @@ export default function TeamBoardPage() {
                         </p>
                       )}
                     </div>
+
+                    {/* Program Workflow Step Level Bar */}
+                    <WorkStepLevelBar subtasks={work.subtasks} />
                   </div>
 
                   <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 space-y-3">
@@ -322,7 +326,7 @@ export default function TeamBoardPage() {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-[#F8F9FD] dark:bg-[#1E1A3D] border-b border-slate-100 dark:border-slate-800 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  <th className="py-4 px-5">Title</th>
+                  <th className="py-4 px-5">Title & Steps</th>
                   <th className="py-4 px-3">Category</th>
                   <th className="py-4 px-3">Priority</th>
                   <th className="py-4 px-3">Status</th>
@@ -337,10 +341,11 @@ export default function TeamBoardPage() {
                     key={work.id}
                     className="hover:bg-slate-50/80 dark:hover:bg-[#1E1A3D]/40 transition-colors"
                   >
-                    <td className="py-4 px-5 font-bold text-slate-900 dark:text-white max-w-xs truncate">
-                      <Link href={`/works/${work.id}`} className="hover:text-[#6C47FF]">
+                    <td className="py-4 px-5 font-bold text-slate-900 dark:text-white max-w-xs space-y-1">
+                      <Link href={`/works/${work.id}`} className="hover:text-[#6C47FF] block truncate">
                         {work.title}
                       </Link>
+                      <WorkStepLevelBar subtasks={work.subtasks} compact />
                     </td>
                     <td className="py-4 px-3">
                       <CategoryBadge category={work.category} />

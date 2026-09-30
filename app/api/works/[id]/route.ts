@@ -19,6 +19,7 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 
     const work = await Work.findById(id)
       .populate('assignedTo', 'name email avatarUrl role isActive')
+      .populate('subtasks.assignedTo', 'name email avatarUrl role')
       .populate('createdBy', 'name email avatarUrl role')
       .populate('completedBy', 'name email avatarUrl role')
       .lean();
@@ -54,6 +55,21 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
         role: u.role,
         avatarUrl: u.avatarUrl || '',
         isActive: u.isActive,
+      })),
+      subtasks: (work.subtasks || []).map((st: any) => ({
+        id: st._id ? st._id.toString() : '',
+        title: st.title,
+        assignedTo: st.assignedTo
+          ? {
+              id: (st.assignedTo as any)._id.toString(),
+              name: (st.assignedTo as any).name,
+              email: (st.assignedTo as any).email,
+              role: (st.assignedTo as any).role,
+              avatarUrl: (st.assignedTo as any).avatarUrl || '',
+            }
+          : null,
+        status: st.status,
+        completedAt: st.completedAt ? st.completedAt.toISOString() : null,
       })),
       createdBy: work.createdBy
         ? {
@@ -209,6 +225,13 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
       if (data.deadline !== undefined) work.deadline = new Date(data.deadline);
       if (data.assignedTo !== undefined) work.assignedTo = data.assignedTo as any;
       if (data.attachments !== undefined) work.attachments = data.attachments;
+      if (data.subtasks !== undefined) {
+        work.subtasks = (data.subtasks || []).map((st: any) => ({
+          title: st.title,
+          assignedTo: st.assignedTo || null,
+          status: st.status || 'pending',
+        })) as any;
+      }
 
       if (data.status !== undefined && data.status !== oldStatus) {
         work.status = data.status;
@@ -240,6 +263,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 
     const updatedWork = await Work.findById(id)
       .populate('assignedTo', 'name email avatarUrl role isActive')
+      .populate('subtasks.assignedTo', 'name email avatarUrl role')
       .populate('createdBy', 'name email avatarUrl role')
       .populate('completedBy', 'name email avatarUrl role')
       .lean();
@@ -261,6 +285,21 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
           role: u.role,
           avatarUrl: u.avatarUrl || '',
           isActive: u.isActive,
+        })),
+        subtasks: (updatedWork!.subtasks || []).map((st: any) => ({
+          id: st._id ? st._id.toString() : '',
+          title: st.title,
+          assignedTo: st.assignedTo
+            ? {
+                id: (st.assignedTo as any)._id.toString(),
+                name: (st.assignedTo as any).name,
+                email: (st.assignedTo as any).email,
+                role: (st.assignedTo as any).role,
+                avatarUrl: (st.assignedTo as any).avatarUrl || '',
+              }
+            : null,
+          status: st.status,
+          completedAt: st.completedAt ? st.completedAt.toISOString() : null,
         })),
         createdBy: updatedWork!.createdBy
           ? {

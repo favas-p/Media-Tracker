@@ -84,3 +84,17 @@ export async function addWorkComment(id: string, message: string): Promise<Comme
   return data.data;
 }
 
+export async function updateSubtaskStatus(
+  workId: string,
+  subtaskId: string,
+  status: 'pending' | 'in_progress' | 'completed'
+): Promise<void> {
+  const res = await fetch(`/api/works/${workId}/subtasks`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ subtaskId, status }),
+  });
+  const data = await res.json();
+  if (!data.success) throw new Error(data.error || 'Failed to update step status');
+}
+

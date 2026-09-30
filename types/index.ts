@@ -15,6 +15,14 @@ export interface UserDTO {
   createdAt: string;
 }
 
+export interface SubTaskDTO {
+  id: string;
+  title: string;
+  assignedTo?: UserDTO | null;
+  status: WorkStatus;
+  completedAt?: string;
+}
+
 export interface WorkDTO {
   id: string;
   title: string;
@@ -24,6 +32,7 @@ export interface WorkDTO {
   deadline: string;
   status: WorkStatus;
   assignedTo: UserDTO[];
+  subtasks: SubTaskDTO[];
   createdBy: UserDTO;
   completedAt?: string;
   completedBy?: UserDTO;

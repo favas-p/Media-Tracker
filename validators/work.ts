@@ -13,6 +13,13 @@ export const workCategorySchema = z.enum([
 export const workPrioritySchema = z.enum(['low', 'medium', 'high']);
 export const workStatusSchema = z.enum(['pending', 'in_progress', 'completed']);
 
+export const subtaskSchema = z.object({
+  id: z.string().optional(),
+  title: z.string().trim().min(1, 'Step title is required'),
+  assignedTo: z.string().optional().nullable(),
+  status: workStatusSchema.optional().default('pending'),
+});
+
 export const createWorkSchema = z.object({
   title: z.string().trim().min(3, 'Title must be at least 3 characters'),
   description: z.string().trim().optional(),
@@ -22,11 +29,17 @@ export const createWorkSchema = z.object({
     message: 'Valid deadline date is required',
   }),
   assignedTo: z.array(z.string().min(1, 'Invalid user ID')).min(1, 'Assign to at least one member'),
+  subtasks: z.array(subtaskSchema).optional().default([]),
   attachments: z.array(z.string().url('Invalid URL')).optional().default([]),
 });
 
 export const updateWorkSchema = createWorkSchema.partial().extend({
   status: workStatusSchema.optional(),
+});
+
+export const updateSubtaskStatusSchema = z.object({
+  subtaskId: z.string().min(1, 'Subtask ID is required'),
+  status: workStatusSchema,
 });
 
 export const updateWorkStatusSchema = z.object({
