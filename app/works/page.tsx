@@ -71,27 +71,27 @@ export default function TeamBoardPage() {
     search !== '' || status !== 'all' || category !== 'all' || priority !== 'all' || assignedTo !== 'all';
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
+    <div className="space-y-6 max-w-[1500px] mx-auto font-sans pb-12">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
-            <Kanban className="w-7 h-7 text-primary-500" />
+          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#0A043D] dark:text-white flex items-center gap-2.5">
+            <Kanban className="w-8 h-8 text-[#2511F7] dark:text-[#FFE600]" />
             Team Works Board
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium mt-1">
             Browse, filter, and track all work assignments across the Nusa Media team.
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           {/* View Toggle */}
-          <div className="flex items-center gap-1 bg-white dark:bg-slate-900 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div className="flex items-center gap-1 bg-white dark:bg-[#0D0647] p-1.5 rounded-full border border-slate-100 dark:border-blue-900/40 shadow-sm">
             <button
               onClick={() => setViewMode('card')}
-              className={`p-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all ${
+              className={`p-2 px-3 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all ${
                 viewMode === 'card'
-                  ? 'bg-primary-500 text-white shadow-sm'
+                  ? 'bg-[#2511F7] text-white shadow-sm'
                   : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
               }`}
               title="Card View"
@@ -101,9 +101,9 @@ export default function TeamBoardPage() {
             </button>
             <button
               onClick={() => setViewMode('list')}
-              className={`p-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all ${
+              className={`p-2 px-3 rounded-full text-xs font-bold flex items-center gap-1.5 transition-all ${
                 viewMode === 'list'
-                  ? 'bg-primary-500 text-white shadow-sm'
+                  ? 'bg-[#2511F7] text-white shadow-sm'
                   : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
               }`}
               title="List View"
@@ -116,17 +116,17 @@ export default function TeamBoardPage() {
           {isAdmin && (
             <Link
               href="/works/new"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-primary-500 text-white font-bold text-xs sm:text-sm shadow-md hover:bg-primary-600 transition-all active:scale-[0.98]"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#2511F7] hover:bg-[#1B07DB] text-white font-bold text-xs sm:text-sm shadow-md shadow-blue-600/30 transition-all hover:scale-105 active:scale-95"
             >
               <Plus className="w-4 h-4 stroke-[3]" />
-              New Work
+              Assign New Work
             </Link>
           )}
         </div>
       </div>
 
       {/* Filter Control Bar */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-4 shadow-sm space-y-4">
+      <div className="bg-white dark:bg-[#0D0647] border border-slate-100 dark:border-blue-900/40 rounded-[28px] p-5 shadow-sm space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
           {/* Search Bar */}
           <div className="relative sm:col-span-2 lg:col-span-1">
@@ -136,7 +136,7 @@ export default function TeamBoardPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search works..."
-              className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 rounded-2xl pl-10 pr-4 py-2 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-primary-500"
+              className="w-full bg-[#F4F6FF] dark:bg-[#150B6E] border border-slate-200 dark:border-blue-900/40 rounded-full pl-10 pr-4 py-2.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-[#2511F7]"
             />
             {search && (
               <button
@@ -153,7 +153,7 @@ export default function TeamBoardPage() {
             <select
               value={status}
               onChange={(e) => setStatus(e.target.value)}
-              className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 rounded-2xl px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-primary-500"
+              className="w-full bg-[#F8F9FD] dark:bg-[#1E1A3D] border border-slate-200 dark:border-slate-700/60 rounded-full px-4 py-2.5 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-[#6C47FF]"
             >
               <option value="all">All Statuses</option>
               <option value="pending">Pending</option>
@@ -167,7 +167,7 @@ export default function TeamBoardPage() {
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 rounded-2xl px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-primary-500"
+              className="w-full bg-[#F8F9FD] dark:bg-[#1E1A3D] border border-slate-200 dark:border-slate-700/60 rounded-full px-4 py-2.5 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-[#6C47FF]"
             >
               <option value="all">All Categories</option>
               <option value="poster">Poster</option>
@@ -185,7 +185,7 @@ export default function TeamBoardPage() {
             <select
               value={priority}
               onChange={(e) => setPriority(e.target.value)}
-              className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 rounded-2xl px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-primary-500"
+              className="w-full bg-[#F8F9FD] dark:bg-[#1E1A3D] border border-slate-200 dark:border-slate-700/60 rounded-full px-4 py-2.5 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-[#6C47FF]"
             >
               <option value="all">All Priorities</option>
               <option value="high">High Priority</option>
@@ -199,7 +199,7 @@ export default function TeamBoardPage() {
             <select
               value={assignedTo}
               onChange={(e) => setAssignedTo(e.target.value)}
-              className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 rounded-2xl px-3 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-primary-500"
+              className="w-full bg-[#F8F9FD] dark:bg-[#1E1A3D] border border-slate-200 dark:border-slate-700/60 rounded-full px-4 py-2.5 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-[#6C47FF]"
             >
               <option value="all">All Assignees</option>
               {members?.map((m) => (
@@ -213,7 +213,7 @@ export default function TeamBoardPage() {
 
         {hasActiveFilters && (
           <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800/80">
-            <span className="text-xs text-slate-500">
+            <span className="text-xs text-slate-500 font-medium">
               Showing filtered results ({works?.length || 0} works)
             </span>
             <button
@@ -233,13 +233,13 @@ export default function TeamBoardPage() {
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div
               key={i}
-              className="h-44 rounded-3xl bg-slate-200 dark:bg-slate-800 animate-pulse"
+              className="h-44 rounded-[28px] bg-slate-200 dark:bg-slate-800 animate-pulse"
             />
           ))}
         </div>
       ) : works?.length === 0 ? (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-12 text-center space-y-3 shadow-sm">
-          <div className="h-16 w-16 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center mx-auto text-2xl font-bold">
+        <div className="bg-white dark:bg-[#151233] border border-slate-100 dark:border-slate-800/80 rounded-[28px] p-12 text-center space-y-3 shadow-sm">
+          <div className="h-16 w-16 rounded-full bg-slate-100 dark:bg-[#1E1A3D] text-[#6C47FF] flex items-center justify-center mx-auto text-2xl font-bold">
             🔍
           </div>
           <h3 className="text-base font-bold text-slate-900 dark:text-white">
@@ -251,7 +251,7 @@ export default function TeamBoardPage() {
           {hasActiveFilters && (
             <button
               onClick={resetFilters}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary-500 text-white text-xs font-semibold mt-2"
+              className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-[#6C47FF] text-white text-xs font-bold mt-2"
             >
               Clear Filters
             </button>
@@ -273,7 +273,7 @@ export default function TeamBoardPage() {
               >
                 <Link
                   href={`/works/${work.id}`}
-                  className="block h-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-primary-500/40 rounded-3xl p-5 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between space-y-4"
+                  className="block h-full bg-white dark:bg-[#151233] border border-slate-100 dark:border-slate-800/80 hover:border-[#6C47FF]/40 rounded-[28px] p-6 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between space-y-4"
                 >
                   <div className="space-y-3">
                     <div className="flex items-center justify-between gap-2 flex-wrap">
@@ -282,7 +282,7 @@ export default function TeamBoardPage() {
                     </div>
 
                     <div className="space-y-1">
-                      <h3 className="font-bold text-base text-slate-900 dark:text-white group-hover:text-primary-500 transition-colors line-clamp-2">
+                      <h3 className="font-bold text-base text-slate-900 dark:text-white group-hover:text-[#6C47FF] transition-colors line-clamp-2">
                         {work.title}
                       </h3>
                       {work.description && (
@@ -317,50 +317,50 @@ export default function TeamBoardPage() {
         </div>
       ) : (
         /* List / Table View */
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl shadow-sm overflow-hidden">
+        <div className="bg-white dark:bg-[#151233] border border-slate-100 dark:border-slate-800/80 rounded-[28px] shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  <th className="py-3.5 px-4">Title</th>
-                  <th className="py-3.5 px-3">Category</th>
-                  <th className="py-3.5 px-3">Priority</th>
-                  <th className="py-3.5 px-3">Status</th>
-                  <th className="py-3.5 px-3">Deadline</th>
-                  <th className="py-3.5 px-3">Assignees</th>
-                  <th className="py-3.5 px-4 text-right">Action</th>
+                <tr className="bg-[#F8F9FD] dark:bg-[#1E1A3D] border-b border-slate-100 dark:border-slate-800 text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                  <th className="py-4 px-5">Title</th>
+                  <th className="py-4 px-3">Category</th>
+                  <th className="py-4 px-3">Priority</th>
+                  <th className="py-4 px-3">Status</th>
+                  <th className="py-4 px-3">Deadline</th>
+                  <th className="py-4 px-3">Assignees</th>
+                  <th className="py-4 px-5 text-right">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-xs">
                 {works?.map((work) => (
                   <tr
                     key={work.id}
-                    className="hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors"
+                    className="hover:bg-slate-50/80 dark:hover:bg-[#1E1A3D]/40 transition-colors"
                   >
-                    <td className="py-3.5 px-4 font-bold text-slate-900 dark:text-white max-w-xs truncate">
-                      <Link href={`/works/${work.id}`} className="hover:text-primary-500">
+                    <td className="py-4 px-5 font-bold text-slate-900 dark:text-white max-w-xs truncate">
+                      <Link href={`/works/${work.id}`} className="hover:text-[#6C47FF]">
                         {work.title}
                       </Link>
                     </td>
-                    <td className="py-3.5 px-3">
+                    <td className="py-4 px-3">
                       <CategoryBadge category={work.category} />
                     </td>
-                    <td className="py-3.5 px-3">
+                    <td className="py-4 px-3">
                       <PriorityBadge priority={work.priority} />
                     </td>
-                    <td className="py-3.5 px-3">
+                    <td className="py-4 px-3">
                       <StatusBadge status={work.status} deadline={work.deadline} />
                     </td>
-                    <td className="py-3.5 px-3 text-slate-600 dark:text-slate-400 whitespace-nowrap">
+                    <td className="py-4 px-3 text-slate-600 dark:text-slate-400 whitespace-nowrap">
                       {format(new Date(work.deadline), 'MMM d, yyyy')}
                     </td>
-                    <td className="py-3.5 px-3">
+                    <td className="py-4 px-3">
                       <AvatarGroup users={work.assignedTo} max={3} />
                     </td>
-                    <td className="py-3.5 px-4 text-right whitespace-nowrap">
+                    <td className="py-4 px-5 text-right whitespace-nowrap">
                       <Link
                         href={`/works/${work.id}`}
-                        className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 hover:bg-primary-500 hover:text-white text-slate-600 dark:text-slate-300 inline-flex items-center gap-1 text-[11px] font-semibold transition-all"
+                        className="px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1E1A3D] hover:bg-[#6C47FF] hover:text-white text-slate-700 dark:text-slate-200 inline-flex items-center gap-1 text-[11px] font-semibold transition-all"
                       >
                         Details
                         <ExternalLink className="w-3 h-3" />
@@ -376,3 +376,4 @@ export default function TeamBoardPage() {
     </div>
   );
 }
+

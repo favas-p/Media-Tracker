@@ -33,13 +33,9 @@ export default function MyWorksPage() {
       updateWorkStatus(id, newStatus),
     onMutate: async ({ id, newStatus }) => {
       setErrorMessage(null);
-      // Cancel outgoing refetches so they don't overwrite optimistic update
       await queryClient.cancelQueries({ queryKey: ['my-works'] });
-
-      // Snapshot previous value
       const previousWorks = queryClient.getQueryData<WorkDTO[]>(['my-works', selectedStatus]);
 
-      // Optimistically update cache
       if (previousWorks) {
         queryClient.setQueryData<WorkDTO[]>(
           ['my-works', selectedStatus],
@@ -52,7 +48,6 @@ export default function MyWorksPage() {
       return { previousWorks };
     },
     onError: (err: Error, variables, context) => {
-      // Revert optimistic update on failure
       if (context?.previousWorks) {
         queryClient.setQueryData(['my-works', selectedStatus], context.previousWorks);
       }
@@ -71,21 +66,21 @@ export default function MyWorksPage() {
   };
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto">
+    <div className="space-y-6 max-w-[1500px] mx-auto font-sans pb-12">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
-            <CheckSquare className="w-7 h-7 text-primary-500" />
+          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#0A043D] dark:text-white flex items-center gap-2.5">
+            <CheckSquare className="w-8 h-8 text-[#2511F7] dark:text-[#FFE600]" />
             My Assigned Works
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium mt-1">
             Tap the checkbox to immediately mark works complete or in progress.
           </p>
         </div>
 
         {/* Status Filter Tabs */}
-        <div className="flex items-center gap-1 bg-white dark:bg-slate-900 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-x-auto">
+        <div className="flex items-center gap-1 bg-white dark:bg-[#0D0647] p-1.5 rounded-full border border-slate-100 dark:border-blue-900/40 shadow-sm overflow-x-auto">
           {[
             { id: 'all', label: 'All' },
             { id: 'pending', label: 'Pending' },
@@ -95,10 +90,10 @@ export default function MyWorksPage() {
             <button
               key={tab.id}
               onClick={() => setSelectedStatus(tab.id)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all ${
+              className={`px-4 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all ${
                 selectedStatus === tab.id
-                  ? 'bg-primary-500 text-white shadow-sm'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  ? 'bg-[#2511F7] text-white shadow-sm'
+                  : 'text-slate-600 dark:text-slate-300 hover:text-[#2511F7] dark:hover:text-[#FFE600]'
               }`}
             >
               {tab.label}
@@ -126,13 +121,13 @@ export default function MyWorksPage() {
           {[1, 2, 3, 4].map((i) => (
             <div
               key={i}
-              className="h-28 rounded-2xl bg-slate-200 dark:bg-slate-800 animate-pulse"
+              className="h-28 rounded-[28px] bg-slate-200 dark:bg-slate-800 animate-pulse"
             />
           ))}
         </div>
       ) : works?.length === 0 ? (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-12 text-center space-y-4 shadow-sm">
-          <div className="h-16 w-16 rounded-full bg-primary-500/10 text-primary-500 flex items-center justify-center mx-auto text-2xl font-bold">
+        <div className="bg-white dark:bg-[#0D0647] border border-slate-100 dark:border-blue-900/40 rounded-[28px] p-12 text-center space-y-4 shadow-sm">
+          <div className="h-16 w-16 rounded-full bg-[#2511F7]/10 text-[#2511F7] dark:text-[#FFE600] flex items-center justify-center mx-auto text-2xl font-bold">
             ✓
           </div>
           <h3 className="text-base font-bold text-slate-900 dark:text-white">
@@ -158,10 +153,10 @@ export default function MyWorksPage() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.98 }}
                   transition={{ duration: 0.2 }}
-                  className={`group bg-white dark:bg-slate-900 border rounded-2xl p-4 sm:p-5 transition-all shadow-sm hover:shadow-md ${
+                  className={`group bg-white dark:bg-[#151233] border rounded-[28px] p-5 sm:p-6 transition-all shadow-sm hover:shadow-md ${
                     isCompleted
-                      ? 'border-slate-200 dark:border-slate-800/60 bg-slate-50/50 dark:bg-slate-900/40 opacity-80'
-                      : 'border-slate-200 dark:border-slate-800 hover:border-primary-500/40'
+                      ? 'border-slate-100 dark:border-slate-800/60 opacity-80'
+                      : 'border-slate-100 dark:border-slate-800/80 hover:border-[#6C47FF]/40'
                   }`}
                 >
                   <div className="flex items-start sm:items-center gap-4">
@@ -169,10 +164,10 @@ export default function MyWorksPage() {
                     <button
                       type="button"
                       onClick={() => handleToggleComplete(work)}
-                      className={`h-7 w-7 rounded-xl flex items-center justify-center flex-shrink-0 transition-all duration-200 border ${
+                      className={`h-8 w-8 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-200 border ${
                         isCompleted
-                          ? 'bg-emerald-500 border-emerald-500 text-white shadow-md shadow-emerald-500/20'
-                          : 'border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 hover:border-primary-500 text-transparent'
+                          ? 'bg-[#6C47FF] border-[#6C47FF] text-white shadow-md shadow-purple-500/20'
+                          : 'border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:border-[#6C47FF] text-transparent'
                       }`}
                       title={isCompleted ? 'Mark in progress' : 'Mark complete'}
                     >
@@ -197,7 +192,7 @@ export default function MyWorksPage() {
                         className={`font-bold text-base transition-all ${
                           isCompleted
                             ? 'line-through text-slate-400 dark:text-slate-500'
-                            : 'text-slate-900 dark:text-white group-hover:text-primary-500'
+                            : 'text-slate-900 dark:text-white group-hover:text-[#6C47FF]'
                         }`}
                       >
                         {work.title}
@@ -221,7 +216,7 @@ export default function MyWorksPage() {
                     {/* View Details Button */}
                     <Link
                       href={`/works/${work.id}`}
-                      className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 hover:bg-primary-500 hover:text-white hover:border-primary-500 text-slate-500 dark:text-slate-400 transition-all flex-shrink-0"
+                      className="p-3 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1E1A3D] hover:bg-[#6C47FF] hover:text-white text-slate-500 dark:text-slate-400 transition-all flex-shrink-0"
                       title="View Details"
                     >
                       <ExternalLink className="w-4 h-4" />
@@ -236,3 +231,4 @@ export default function MyWorksPage() {
     </div>
   );
 }
+

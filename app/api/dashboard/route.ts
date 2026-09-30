@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/db';
 import Work from '@/models/Work';
+import User from '@/models/User';
 import Activity from '@/models/Activity';
 import { getServerUser, unauthorizedResponse } from '@/lib/auth-utils';
 
@@ -23,12 +24,33 @@ export async function GET() {
     const pending = await Work.countDocuments({ status: 'pending' });
     const inProgress = await Work.countDocuments({ status: 'in_progress' });
     const completed = await Work.countDocuments({ status: 'completed' });
-    
+    const totalMembers = await User.countDocuments({ isActive: true });
+
     // Overdue: deadline < now AND status is NOT completed
     const overdue = await Work.countDocuments({
       deadline: { $lt: now },
       status: { $ne: 'completed' },
     });
+
+    // Work Category counts for Media breakdown
+    const videoWorks = await Work.countDocuments({ category: 'video' });
+    const graphicWorks = await Work.countDocuments({ category: 'graphic' });
+    const socialMediaWorks = await Work.countDocuments({ category: 'social_media' });
+    const contentWorks = await Work.countDocuments({ category: 'content' });
+
+    // Calculate rates
+    const pendingRate = total > 0 ? Math.round((pending / total) * 100) : 0;
+    const inProgressRate = total > 0 ? Math.round((inProgress / total) * 100) : 0;
+    const completionRate = total > 0 ? Math.round((completed / total) * 100) : 0;
+    const overdueRate = total > 0 ? Math.round((overdue / total) * 100) : 0;
+
+    // All recent works for dashboard task panel & timeline
+    const allRecentWorks = await Work.find()
+      .populate('assignedTo', 'name email avatarUrl role')
+      .populate('createdBy', 'name email avatarUrl role')
+      .sort({ deadline: 1 })
+      .limit(10)
+      .lean();
 
     // My upcoming works (assigned to current user, not completed, sorted by deadline)
     const myUpcomingWorks = await Work.find({
@@ -49,13 +71,13 @@ export async function GET() {
       .limit(8)
       .lean();
 
-    const formattedUpcoming = myUpcomingWorks.map((w) => ({
+    const formatWorkItem = (w: any) => ({
       id: w._id.toString(),
       title: w.title,
       description: w.description || '',
       category: w.category,
       priority: w.priority,
-      deadline: w.deadline.toISOString(),
+      deadline: w.deadline ? w.deadline.toISOString() : new Date().toISOString(),
       status: w.status,
       assignedTo: (w.assignedTo || []).map((u: any) => ({
         id: u._id.toString(),
@@ -74,9 +96,12 @@ export async function GET() {
           }
         : null,
       attachments: w.attachments || [],
-      createdAt: w.createdAt.toISOString(),
-      updatedAt: w.updatedAt.toISOString(),
-    }));
+      createdAt: w.createdAt ? w.createdAt.toISOString() : new Date().toISOString(),
+      updatedAt: w.updatedAt ? w.updatedAt.toISOString() : new Date().toISOString(),
+    });
+
+    const formattedUpcoming = myUpcomingWorks.map(formatWorkItem);
+    const formattedAllWorks = allRecentWorks.map(formatWorkItem);
 
     const formattedActivities = recentActivities.map((a) => ({
       id: a._id.toString(),
@@ -97,14 +122,32 @@ export async function GET() {
     return NextResponse.json({
       success: true,
       data: {
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        },
         stats: {
           total,
           pending,
           inProgress,
           completed,
           overdue,
+          totalMembers,
+          pendingRate,
+          inProgressRate,
+          completionRate,
+          overdueRate,
+          categories: {
+            video: videoWorks,
+            graphic: graphicWorks,
+            socialMedia: socialMediaWorks,
+            content: contentWorks,
+          },
         },
         myUpcomingWorks: formattedUpcoming,
+        allWorks: formattedAllWorks,
         recentActivities: formattedActivities,
       },
     });
@@ -116,3 +159,4 @@ export async function GET() {
     );
   }
 }
+

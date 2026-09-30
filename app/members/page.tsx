@@ -192,15 +192,15 @@ export default function MembersPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
+    <div className="space-y-6 max-w-[1500px] mx-auto font-sans pb-12">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
-            <Users className="w-7 h-7 text-primary-500" />
+          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#0A043D] dark:text-white flex items-center gap-2.5">
+            <Users className="w-8 h-8 text-[#2511F7] dark:text-[#FFE600]" />
             Nusa Media Team Members
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium mt-1">
             Manage user roles, create new team member accounts, or reset passwords.
           </p>
         </div>
@@ -210,7 +210,7 @@ export default function MembersPage() {
             resetAddForm();
             setIsAddOpen(true);
           }}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-primary-500 text-white font-bold text-xs sm:text-sm shadow-md hover:bg-primary-600 transition-all active:scale-[0.98]"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#2511F7] hover:bg-[#1B07DB] text-white font-bold text-xs sm:text-sm shadow-md shadow-blue-600/30 transition-all hover:scale-105 active:scale-95 self-start sm:self-auto"
         >
           <UserPlus className="w-4 h-4 stroke-[3]" />
           Add New Member
@@ -218,7 +218,7 @@ export default function MembersPage() {
       </div>
 
       {/* Filter & Search Controls */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-4 shadow-sm flex flex-col sm:flex-row gap-3 items-center justify-between">
+      <div className="bg-white dark:bg-[#151233] border border-slate-100 dark:border-slate-800/80 rounded-[28px] p-4 shadow-sm flex flex-col sm:flex-row gap-3 items-center justify-between">
         <div className="relative w-full sm:w-80">
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <input
@@ -226,7 +226,7 @@ export default function MembersPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search by name or email..."
-            className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 rounded-2xl pl-10 pr-4 py-2 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-primary-500"
+            className="w-full bg-[#F8F9FD] dark:bg-[#1E1A3D] border border-slate-200 dark:border-slate-700/60 rounded-full pl-10 pr-4 py-2.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-[#6C47FF]"
           />
         </div>
 
@@ -234,7 +234,7 @@ export default function MembersPage() {
           <select
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
-            className="bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-primary-500"
+            className="bg-[#F8F9FD] dark:bg-[#1E1A3D] border border-slate-200 dark:border-slate-700/60 rounded-full px-4 py-2.5 text-xs text-slate-900 dark:text-slate-100 focus:outline-none focus:border-[#6C47FF]"
           >
             <option value="all">All Roles</option>
             <option value="chairman">Chairman</option>
@@ -248,13 +248,13 @@ export default function MembersPage() {
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="h-44 rounded-3xl bg-slate-200 dark:bg-slate-800 animate-pulse" />
+            <div key={i} className="h-44 rounded-[28px] bg-slate-200 dark:bg-slate-800 animate-pulse" />
           ))}
         </div>
       ) : filteredMembers?.length === 0 ? (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-12 text-center space-y-3">
-          <p className="text-sm font-bold text-slate-900 dark:text-white">No members found</p>
-          <p className="text-xs text-slate-400">Try adjusting search or role filters.</p>
+        <div className="bg-white dark:bg-[#151233] border border-slate-100 dark:border-slate-800/80 rounded-[28px] p-12 text-center space-y-3 shadow-sm">
+          <p className="text-base font-bold text-slate-900 dark:text-white">No members found</p>
+          <p className="text-xs text-slate-400 font-medium">Try adjusting search or role filters.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -262,13 +262,13 @@ export default function MembersPage() {
             <motion.div
               key={m.id}
               whileHover={{ y: -3 }}
-              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-5 shadow-sm space-y-4 flex flex-col justify-between"
+              className="bg-white dark:bg-[#151233] border border-slate-100 dark:border-slate-800/80 rounded-[28px] p-6 shadow-sm space-y-4 flex flex-col justify-between"
             >
               <div className="flex items-start gap-3.5">
                 <img
                   src={m.avatarUrl || `https://api.dicebear.com/7.x/avataaars/svg?seed=${m.name}`}
                   alt={m.name}
-                  className="h-12 w-12 rounded-full object-cover ring-2 ring-primary-500/20 flex-shrink-0"
+                  className="h-12 w-12 rounded-full object-cover ring-2 ring-[#6C47FF]/30 flex-shrink-0"
                 />
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-1.5 flex-wrap">
@@ -276,15 +276,15 @@ export default function MembersPage() {
                       {m.name}
                     </h3>
                     {!m.isActive && (
-                      <span className="px-1.5 py-0.2 rounded text-[9px] font-bold uppercase bg-rose-500/10 text-rose-500">
+                      <span className="px-2 py-0.5 rounded-full text-[9px] font-bold uppercase bg-rose-500/10 text-rose-500">
                         Inactive
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-slate-400 truncate mt-0.5">{m.email}</p>
+                  <p className="text-xs text-slate-400 truncate mt-0.5 font-medium">{m.email}</p>
                   <div className="flex items-center gap-2 mt-2">
                     <span
-                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${
+                      className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
                         m.role === 'chairman'
                           ? 'bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20'
                           : m.role === 'convener'
@@ -303,20 +303,20 @@ export default function MembersPage() {
 
               {/* Action Buttons */}
               <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs">
-                <span className="text-[10px] text-slate-400">
+                <span className="text-[10px] text-slate-400 font-medium">
                   Joined {m.createdAt ? format(new Date(m.createdAt), 'MMM yyyy') : 'Recently'}
                 </span>
                 <div className="flex items-center gap-1.5">
                   <button
                     onClick={() => openResetPasswordModal(m)}
-                    className="p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-950/20 transition-colors"
+                    className="p-2 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1E1A3D] text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-950/20 transition-colors"
                     title="Reset Password"
                   >
                     <Key className="w-3.5 h-3.5" />
                   </button>
                   <button
                     onClick={() => openEditModal(m)}
-                    className="p-2 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-colors"
+                    className="p-2 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1E1A3D] text-[#6C47FF] hover:bg-purple-50 dark:hover:bg-purple-950/20 transition-colors"
                     title="Edit Member"
                   >
                     <Edit2 className="w-3.5 h-3.5" />

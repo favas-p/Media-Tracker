@@ -125,20 +125,20 @@ export default function NewWorkPage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6">
+    <div className="max-w-3xl mx-auto space-y-6 font-sans pb-12">
       {/* Navigation Header */}
       <div className="flex items-center gap-3">
         <Link
           href="/works"
-          className="p-2.5 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors"
+          className="p-2.5 rounded-full border border-slate-200 dark:border-blue-900/40 bg-white dark:bg-[#150B6E] hover:bg-slate-100 dark:hover:bg-blue-900/60 text-slate-600 dark:text-slate-300 transition-colors shadow-sm"
         >
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">
+          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#0A043D] dark:text-white">
             Create & Assign Work
           </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-medium mt-0.5">
             Assign media tasks, set deadlines, and attach reference briefs.
           </p>
         </div>
@@ -157,7 +157,7 @@ export default function NewWorkPage() {
       )}
 
       {/* Create Form */}
-      <form onSubmit={handleSubmit} className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+      <form onSubmit={handleSubmit} className="bg-white dark:bg-[#0D0647] border border-slate-100 dark:border-blue-900/40 rounded-[28px] p-6 sm:p-8 shadow-sm space-y-6">
         {/* Title */}
         <div className="space-y-1.5">
           <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
@@ -169,7 +169,7 @@ export default function NewWorkPage() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="e.g., Weekly Highlight Reels & Poster Design"
-            className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-primary-500 transition-colors"
+            className="w-full bg-[#F4F6FF] dark:bg-[#150B6E] border border-slate-200 dark:border-blue-900/40 rounded-full px-4 py-3 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-[#2511F7] transition-colors"
           />
         </div>
 
@@ -183,7 +183,7 @@ export default function NewWorkPage() {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Provide detail instructions, aspect ratio, camera settings, tone, etc."
-            className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-primary-500 transition-colors"
+            className="w-full bg-[#F4F6FF] dark:bg-[#150B6E] border border-slate-200 dark:border-blue-900/40 rounded-3xl px-4 py-3 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-[#2511F7] transition-colors"
           />
         </div>
 
@@ -196,7 +196,7 @@ export default function NewWorkPage() {
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value as WorkCategory)}
-              className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-primary-500"
+              className="w-full bg-[#F4F6FF] dark:bg-[#150B6E] border border-slate-200 dark:border-blue-900/40 rounded-full px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-[#2511F7]"
             >
               <option value="video">Video</option>
               <option value="reels">Reels / TikTok</option>
@@ -215,7 +215,7 @@ export default function NewWorkPage() {
             <select
               value={priority}
               onChange={(e) => setPriority(e.target.value as WorkPriority)}
-              className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-primary-500"
+              className="w-full bg-[#F4F6FF] dark:bg-[#150B6E] border border-slate-200 dark:border-blue-900/40 rounded-full px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-[#2511F7]"
             >
               <option value="low">Low Priority</option>
               <option value="medium">Medium Priority</option>
@@ -232,7 +232,7 @@ export default function NewWorkPage() {
               required
               value={deadline}
               onChange={(e) => setDeadline(e.target.value)}
-              className="w-full bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 rounded-2xl px-3.5 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-primary-500"
+              className="w-full bg-[#F4F6FF] dark:bg-[#150B6E] border border-slate-200 dark:border-blue-900/40 rounded-full px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 focus:outline-none focus:border-[#2511F7]"
             />
           </div>
         </div>
@@ -241,7 +241,7 @@ export default function NewWorkPage() {
         <div className="space-y-3 pt-2">
           <div className="flex items-center justify-between">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-              <UserCheck className="w-4 h-4 text-primary-500" />
+              <UserCheck className="w-4 h-4 text-[#2511F7] dark:text-[#FFE600]" />
               Assign to Team Members <span className="text-rose-500">*</span>
             </label>
             <span className="text-xs text-slate-400 font-medium">
@@ -262,14 +262,14 @@ export default function NewWorkPage() {
                     onClick={() => toggleAssignee(m.id)}
                     className={`flex items-center gap-3 p-3 rounded-2xl border text-left transition-all ${
                       isSelected
-                        ? 'border-primary-500 bg-primary-500/10 text-slate-900 dark:text-white'
-                        : 'border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 text-slate-600 dark:text-slate-400 hover:border-slate-300'
+                        ? 'border-[#2511F7] bg-[#2511F7]/10 text-slate-900 dark:text-white font-bold'
+                        : 'border-slate-200 dark:border-blue-900/40 bg-[#F4F6FF] dark:bg-[#150B6E] text-slate-600 dark:text-slate-400 hover:border-slate-300'
                     }`}
                   >
                     <div
-                      className={`h-5 w-5 rounded-lg border flex items-center justify-center transition-colors ${
+                      className={`h-5 w-5 rounded-full border flex items-center justify-center transition-colors ${
                         isSelected
-                          ? 'bg-primary-500 border-primary-500 text-white'
+                          ? 'bg-[#2511F7] border-[#2511F7] text-white'
                           : 'border-slate-300 dark:border-slate-700'
                       }`}
                     >
@@ -282,7 +282,7 @@ export default function NewWorkPage() {
                     />
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-bold truncate">{m.name}</p>
-                      <span className="text-[10px] text-slate-400 uppercase tracking-wider">
+                      <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">
                         {m.role}
                       </span>
                     </div>
@@ -296,7 +296,7 @@ export default function NewWorkPage() {
         {/* Attachments Section */}
         <div className="space-y-3 pt-2">
           <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-            <LinkIcon className="w-4 h-4 text-primary-500" />
+            <LinkIcon className="w-4 h-4 text-[#2511F7] dark:text-[#FFE600]" />
             Attachments & Reference URLs (Cloudinary / Unsplash / Drive)
           </label>
 
@@ -306,12 +306,12 @@ export default function NewWorkPage() {
               value={attachmentUrl}
               onChange={(e) => setAttachmentUrl(e.target.value)}
               placeholder="https://images.unsplash.com/..."
-              className="flex-1 bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-2.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-primary-500"
+              className="flex-1 bg-[#F4F6FF] dark:bg-[#150B6E] border border-slate-200 dark:border-blue-900/40 rounded-full px-4 py-2.5 text-xs text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-[#2511F7]"
             />
             <button
               type="button"
               onClick={handleAddAttachment}
-              className="px-4 py-2.5 rounded-2xl bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-bold hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors"
+              className="px-4 py-2.5 rounded-full bg-slate-200 dark:bg-[#150B6E] text-slate-800 dark:text-slate-200 text-xs font-bold hover:bg-slate-300 transition-colors"
             >
               Add URL
             </button>
@@ -322,9 +322,9 @@ export default function NewWorkPage() {
               {attachments.map((url, i) => (
                 <div
                   key={i}
-                  className="flex items-center justify-between p-2.5 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-800 text-xs"
+                  className="flex items-center justify-between p-2.5 bg-[#F4F6FF] dark:bg-[#150B6E] rounded-2xl border border-slate-200 dark:border-blue-900/40 text-xs"
                 >
-                  <span className="truncate max-w-md text-primary-600 dark:text-primary-400">
+                  <span className="truncate max-w-md text-[#2511F7] dark:text-[#FFE600] font-semibold">
                     {url}
                   </span>
                   <button
@@ -341,10 +341,10 @@ export default function NewWorkPage() {
         </div>
 
         {/* Action Buttons */}
-        <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-100 dark:border-slate-800">
+        <div className="pt-4 flex items-center justify-end gap-3 border-t border-slate-100 dark:border-blue-900/40">
           <Link
             href="/works"
-            className="px-5 py-2.5 rounded-2xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 text-xs font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            className="px-5 py-2.5 rounded-full border border-slate-200 dark:border-blue-900/40 text-slate-600 dark:text-slate-400 text-xs font-semibold hover:bg-slate-100 dark:hover:bg-[#150B6E] transition-colors"
           >
             Cancel
           </Link>
@@ -352,7 +352,7 @@ export default function NewWorkPage() {
           <button
             type="submit"
             disabled={createMutation.isPending}
-            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-2xl bg-primary-500 text-white text-xs font-bold shadow-md hover:bg-primary-600 transition-all disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#2511F7] hover:bg-[#1B07DB] text-white text-xs font-bold shadow-md shadow-blue-600/30 transition-all disabled:opacity-50 hover:scale-105"
           >
             {createMutation.isPending ? (
               <>
@@ -371,3 +371,4 @@ export default function NewWorkPage() {
     </div>
   );
 }
+
