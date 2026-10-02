@@ -57,6 +57,7 @@ export default function NewWorkPage() {
     mutationFn: createWork,
     onSuccess: (newWork) => {
       queryClient.invalidateQueries({ queryKey: ['works'] });
+      queryClient.invalidateQueries({ queryKey: ['my-works'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard'] });
       router.push(`/works/${newWork.id}`);
     },
@@ -115,13 +116,19 @@ export default function NewWorkPage() {
         status: 'pending' as const,
       }));
 
+    const subtaskAssigneeIds = validSubtasks
+      .map((st) => st.assignedTo)
+      .filter((id): id is string => Boolean(id));
+
+    const allAssigned = Array.from(new Set([...selectedAssignees, ...subtaskAssigneeIds]));
+
     const payload = {
       title: title.trim(),
       description: description.trim(),
       category,
       priority,
       deadline,
-      assignedTo: selectedAssignees,
+      assignedTo: allAssigned,
       subtasks: validSubtasks,
       attachments,
     };
@@ -275,9 +282,24 @@ export default function NewWorkPage() {
               <UserCheck className="w-4 h-4 text-[#2511F7] dark:text-[#FFE600]" />
               Assign to Team Members <span className="text-rose-500">*</span>
             </label>
-            <span className="text-xs text-slate-400 font-medium">
-              {selectedAssignees.length} selected
-            </span>
+            <div className="flex items-center gap-2">
+              {session?.user?.id && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (session.user?.id) {
+                      toggleAssignee(session.user.id);
+                    }
+                  }}
+                  className="px-2.5 py-1 rounded-full text-[11px] font-bold bg-[#2511F7]/10 text-[#2511F7] dark:text-[#FFE600] hover:bg-[#2511F7]/20 transition-colors"
+                >
+                  {selectedAssignees.includes(session.user.id) ? '✓ Assigned to Me' : '+ Assign to Me'}
+                </button>
+              )}
+              <span className="text-xs text-slate-400 font-medium">
+                {selectedAssignees.length} selected
+              </span>
+            </div>
           </div>
 
           {isLoadingMembers ? (

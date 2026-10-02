@@ -24,22 +24,39 @@ export async function GET(req: NextRequest) {
     const search = searchParams.get('search');
 
     const filter: Record<string, unknown> = {};
+    const conditions: Record<string, unknown>[] = [];
 
     if (status) filter.status = status;
     if (category) filter.category = category;
     if (priority) filter.priority = priority;
 
     if (myWorks) {
-      filter.assignedTo = user.id;
+      conditions.push({
+        $or: [
+          { assignedTo: user.id },
+          { 'subtasks.assignedTo': user.id },
+        ],
+      });
     } else if (assignedTo) {
-      filter.assignedTo = assignedTo;
+      conditions.push({
+        $or: [
+          { assignedTo },
+          { 'subtasks.assignedTo': assignedTo },
+        ],
+      });
     }
 
     if (search) {
-      filter.$or = [
-        { title: { $regex: search, $options: 'i' } },
-        { description: { $regex: search, $options: 'i' } },
-      ];
+      conditions.push({
+        $or: [
+          { title: { $regex: search, $options: 'i' } },
+          { description: { $regex: search, $options: 'i' } },
+        ],
+      });
+    }
+
+    if (conditions.length > 0) {
+      filter.$and = conditions;
     }
 
     const works = await Work.find(filter)

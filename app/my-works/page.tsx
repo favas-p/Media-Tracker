@@ -183,8 +183,8 @@ export default function MyWorksPage() {
                     {/* Content Details */}
                     <div className="flex-1 min-w-0 space-y-1.5">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <CategoryBadge category={work.category} />
-                        <PriorityBadge priority={work.priority} />
+                        <CategoryBadge category={work.category} variant="pill" />
+                        <PriorityBadge priority={work.priority} variant="pill" />
                         <StatusBadge status={work.status} deadline={work.deadline} />
                       </div>
 
