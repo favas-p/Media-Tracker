@@ -48,12 +48,6 @@ export default function LoginPage() {
     }
   };
 
-  const setQuickCredentials = (inputUsername: string, userPass: string) => {
-    setUsername(inputUsername);
-    setPassword(userPass);
-    setError(null);
-  };
-
   return (
     <div className="min-h-screen flex flex-col justify-center items-center px-4 py-12 bg-[#F4F6FF] dark:bg-[#07022E] text-slate-900 dark:text-slate-100 font-sans relative overflow-hidden">
       {/* Background Decorative Blur Orbs */}
@@ -155,39 +149,7 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/* Demo Quick Logins */}
-        <div className="pt-4 border-t border-slate-100 dark:border-blue-900/40 space-y-3">
-          <p className="text-xs text-slate-500 dark:text-slate-400 text-center font-medium">Quick Demo Access (Username Shortcuts):</p>
-          <div className="grid grid-cols-3 gap-2">
-            <button
-              type="button"
-              onClick={() => setQuickCredentials('chairman', 'AdminNusa2026!')}
-              className="py-2 px-2 bg-[#F4F6FF] dark:bg-[#150B6E] hover:bg-blue-100 dark:hover:bg-blue-900/60 border border-slate-200 dark:border-blue-900/40 rounded-2xl text-[11px] font-bold text-slate-700 dark:text-slate-200 text-center transition-colors truncate flex flex-col items-center"
-              title="Chairman Account (username: chairman)"
-            >
-              <span>👑 Chairman</span>
-              <span className="text-[9px] text-[#2511F7] dark:text-[#FFE600] font-normal">@chairman</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setQuickCredentials('convener', 'AdminNusa2026!')}
-              className="py-2 px-2 bg-[#F4F6FF] dark:bg-[#150B6E] hover:bg-blue-100 dark:hover:bg-blue-900/60 border border-slate-200 dark:border-blue-900/40 rounded-2xl text-[11px] font-bold text-slate-700 dark:text-slate-200 text-center transition-colors truncate flex flex-col items-center"
-              title="Convener Account (username: convener)"
-            >
-              <span>📋 Convener</span>
-              <span className="text-[9px] text-[#2511F7] dark:text-[#FFE600] font-normal">@convener</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => setQuickCredentials('budi', 'AdminNusa2026!')}
-              className="py-2 px-2 bg-[#F4F6FF] dark:bg-[#150B6E] hover:bg-blue-100 dark:hover:bg-blue-900/60 border border-slate-200 dark:border-blue-900/40 rounded-2xl text-[11px] font-bold text-slate-700 dark:text-slate-200 text-center transition-colors truncate flex flex-col items-center"
-              title="Member Account (username: budi)"
-            >
-              <span>👤 Member</span>
-              <span className="text-[9px] text-[#2511F7] dark:text-[#FFE600] font-normal">@budi</span>
-            </button>
-          </div>
-        </div>
+
       </motion.div>
     </div>
   );

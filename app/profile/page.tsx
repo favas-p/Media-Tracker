@@ -26,6 +26,11 @@ export default function ProfilePage() {
     }
   }, [session]);
 
+  const handleLogout = async () => {
+    await signOut({ redirect: false });
+    window.location.href = '/login';
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -222,7 +227,7 @@ export default function ProfilePage() {
         </div>
         <button
           type="button"
-          onClick={() => signOut({ callbackUrl: '/login' })}
+          onClick={handleLogout}
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs shadow-md shadow-rose-500/20 transition-all duration-200 hover:scale-105"
         >
           <LogOut className="w-4 h-4" />

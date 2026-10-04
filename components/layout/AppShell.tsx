@@ -57,6 +57,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     { name: 'Relax Zone', href: '/game' },
   ];
 
+  const handleLogout = async () => {
+    await signOut({ redirect: false });
+    window.location.href = '/login';
+  };
+
   // Don't render shell on /login or root landing page
   if (pathname === '/login' || pathname === '/') {
     return (
@@ -116,7 +121,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
             {/* Logout Button */}
             <button
-              onClick={() => signOut({ callbackUrl: '/login' })}
+              onClick={handleLogout}
               className="hidden sm:inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full border border-rose-200 dark:border-rose-900/40 bg-rose-50/70 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 text-xs font-semibold hover:bg-rose-500 hover:text-white dark:hover:bg-rose-600 dark:hover:text-white transition-all duration-200 shadow-sm"
               title="Log Out"
             >
@@ -191,7 +196,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <div className="pt-2 border-t border-slate-200 dark:border-blue-900/40 flex justify-between items-center px-2">
               <span className="text-xs text-slate-500">{session?.user?.name}</span>
               <button
-                onClick={() => signOut({ callbackUrl: '/login' })}
+                onClick={handleLogout}
                 className="text-xs font-semibold text-rose-500 hover:underline flex items-center gap-1"
               >
                 <LogOut className="w-3.5 h-3.5" /> Sign Out

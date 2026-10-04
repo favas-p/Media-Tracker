@@ -35,8 +35,8 @@ export default function TeamBoardPage() {
   const isAdmin = isAdminRole(session?.user?.role);
   const queryClient = useQueryClient();
 
-  // View mode: 'kanban' (Default matching UI screenshot), 'card', 'list'
-  const [viewMode, setViewMode] = useState<'kanban' | 'card' | 'list'>('kanban');
+  // View mode: 'kanban', 'card' (Default), 'list'
+  const [viewMode, setViewMode] = useState<'kanban' | 'card' | 'list'>('card');
 
   // Filters State
   const [search, setSearch] = useState('');
