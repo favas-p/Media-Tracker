@@ -39,6 +39,7 @@ import {
 import { format } from 'date-fns';
 import { SnakeVsBlockGame } from '@/components/game/SnakeVsBlockGame';
 import { TeamLeaderboard } from '@/components/game/TeamLeaderboard';
+import { isAdminRole } from '@/lib/auth-utils';
 
 async function getDashboardData() {
   try {
@@ -53,6 +54,7 @@ async function getDashboardData() {
 
 export default function DashboardPage() {
   const { data: session } = useSession();
+  const isAdmin = isAdminRole(session?.user?.role);
 
   const { data, isLoading } = useQuery({
     queryKey: ['dashboard'],
@@ -171,13 +173,15 @@ export default function DashboardPage() {
           </p>
         </div>
 
-        <Link
-          href="/works/new"
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#2511F7] hover:bg-[#1B07DB] text-white font-semibold text-xs shadow-md shadow-blue-600/30 transition-all hover:scale-105 active:scale-95 self-start sm:self-auto"
-        >
-          <Plus className="w-4 h-4 stroke-[2.5]" />
-          Assign New Work
-        </Link>
+        {isAdmin && (
+          <Link
+            href="/works/new"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-[#2511F7] hover:bg-[#1B07DB] text-white font-semibold text-xs shadow-md shadow-blue-600/30 transition-all hover:scale-105 active:scale-95 self-start sm:self-auto"
+          >
+            <Plus className="w-4 h-4 stroke-[2.5]" />
+            Assign New Work
+          </Link>
+        )}
       </div>
 
       {/* 2. Real Project KPI Capsule & Counter Bar */}

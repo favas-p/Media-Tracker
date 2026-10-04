@@ -28,6 +28,19 @@ export default function NewWorkPage() {
   const queryClient = useQueryClient();
   const { data: session } = useSession();
   const isAdmin = isAdminRole(session?.user?.role);
+  if (session && !isAdmin) {
+    return (
+      <div className="max-w-md mx-auto my-12 p-8 bg-white dark:bg-[#0D0647] border border-rose-100 dark:border-rose-900/40 rounded-3xl text-center space-y-4 shadow-sm">
+        <h2 className="text-lg font-bold text-rose-600 dark:text-rose-400">Access Restricted</h2>
+        <p className="text-xs text-slate-600 dark:text-slate-300">
+          Only Chairman and Convener accounts can assign new work tasks.
+        </p>
+        <Link href="/dashboard" className="inline-block px-5 py-2 rounded-full bg-[#2511F7] text-white text-xs font-bold shadow-md shadow-blue-600/30">
+          Return to Dashboard
+        </Link>
+      </div>
+    );
+  }
 
   // Form State
   const [title, setTitle] = useState('');
