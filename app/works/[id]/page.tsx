@@ -25,11 +25,13 @@ import {
   PlayCircle,
   AlertTriangle,
   ListChecks,
+  Share2,
 } from 'lucide-react';
 import { fetchWorkById, updateWorkStatus, updateSubtaskStatus, deleteWork, addWorkComment } from '@/services/work';
 import { StatusBadge } from '@/components/ui/StatusBadge';
 import { CategoryBadge } from '@/components/ui/CategoryBadge';
 import { PriorityBadge } from '@/components/ui/PriorityBadge';
+import { ShareWorkModal } from '@/components/ui/ShareWorkModal';
 import { WorkStatus } from '@/types';
 import { isAdminRole } from '@/lib/auth-utils';
 import { format, formatDistanceToNow } from 'date-fns';
@@ -44,6 +46,7 @@ export default function WorkDetailsPage() {
   const [commentMessage, setCommentMessage] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   // Fetch Work details, comments, and activities
   const { data, isLoading, isError, refetch } = useQuery({
@@ -169,26 +172,39 @@ export default function WorkDetailsPage() {
           </div>
         </div>
 
-        {/* Admin Action Buttons */}
-        {isAdmin && (
-          <div className="flex items-center gap-2">
-            <Link
-              href={`/works/${id}/edit`}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1E1A3D] text-slate-700 dark:text-slate-200 text-xs font-semibold hover:bg-slate-50 transition-colors shadow-sm"
-            >
-              <Edit className="w-3.5 h-3.5" />
-              Edit Work
-            </Link>
-            <button
-              onClick={handleDelete}
-              disabled={isDeleting}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-rose-500/20 bg-rose-500/10 text-rose-500 text-xs font-semibold hover:bg-rose-500/20 transition-colors"
-            >
-              {isDeleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
-              Delete
-            </button>
-          </div>
-        )}
+        {/* Header Action Buttons */}
+        <div className="flex items-center gap-2">
+          {/* Share Task Button */}
+          <button
+            type="button"
+            onClick={() => setIsShareModalOpen(true)}
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#2511F7] hover:bg-[#1B07DB] text-white text-xs font-extrabold shadow-md shadow-blue-600/20 transition-all hover:scale-105 active:scale-95"
+          >
+            <Share2 className="w-3.5 h-3.5 stroke-[2.5]" />
+            <span>Share Task</span>
+          </button>
+
+          {/* Admin Action Buttons */}
+          {isAdmin && (
+            <>
+              <Link
+                href={`/works/${id}/edit`}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1E1A3D] text-slate-700 dark:text-slate-200 text-xs font-semibold hover:bg-slate-50 transition-colors shadow-sm"
+              >
+                <Edit className="w-3.5 h-3.5" />
+                Edit Work
+              </Link>
+              <button
+                onClick={handleDelete}
+                disabled={isDeleting}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-rose-500/20 bg-rose-500/10 text-rose-500 text-xs font-semibold hover:bg-rose-500/20 transition-colors"
+              >
+                {isDeleting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Trash2 className="w-3.5 h-3.5" />}
+                Delete
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Error Alert */}
@@ -607,6 +623,13 @@ export default function WorkDetailsPage() {
           </div>
         </div>
       </div>
+
+      {/* Share Work Modal */}
+      <ShareWorkModal
+        work={work}
+        isOpen={isShareModalOpen}
+        onClose={() => setIsShareModalOpen(false)}
+      />
     </div>
   );
 }

@@ -2,12 +2,13 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { format } from 'date-fns';
-import { Calendar, MoreVertical, CheckCircle2, Clock, PlayCircle, ChevronRight, ArrowRightLeft } from 'lucide-react';
+import { Calendar, MoreVertical, CheckCircle2, Clock, PlayCircle, ChevronRight, ArrowRightLeft, Share2 } from 'lucide-react';
 import { WorkDTO, WorkStatus } from '@/types';
 import { AvatarGroup } from '@/components/ui/AvatarGroup';
 import { PriorityBadge } from '@/components/ui/PriorityBadge';
 import { CategoryBadge } from '@/components/ui/CategoryBadge';
 import { WorkStepLevelBar } from '@/components/ui/WorkStepLevelBar';
+import { ShareWorkModal } from '@/components/ui/ShareWorkModal';
 
 interface TeamWorkCardProps {
   work: WorkDTO;
@@ -17,6 +18,7 @@ interface TeamWorkCardProps {
 
 export function TeamWorkCard({ work, onStatusChange, isDragging = false }: TeamWorkCardProps) {
   const [showMenu, setShowMenu] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   // Format date range: e.g. "5 Sept 2024 - 5 Oct 2024" or fallback
   const startDateStr = work.createdAt
@@ -155,13 +157,34 @@ export function TeamWorkCard({ work, onStatusChange, isDragging = false }: TeamW
           </span>
         </div>
 
-        <Link
-          href={`/works/${work.id}`}
-          className="text-slate-400 hover:text-[#2511F7] dark:hover:text-[#FFE600] transition-colors p-1"
-          title="Open work detail"
-        >
-          <ChevronRight className="w-4 h-4" />
-        </Link>
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setShowShareModal(true);
+            }}
+            className="p-1 rounded-full text-slate-400 hover:text-[#2511F7] dark:hover:text-[#FFE600] hover:bg-slate-100 dark:hover:bg-blue-900/40 transition-colors"
+            title="Share work card"
+          >
+            <Share2 className="w-4 h-4" />
+          </button>
+          <Link
+            href={`/works/${work.id}`}
+            className="text-slate-400 hover:text-[#2511F7] dark:hover:text-[#FFE600] transition-colors p-1"
+            title="Open work detail"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </Link>
+        </div>
+
+        {/* Share Work Modal */}
+        <ShareWorkModal
+          work={work}
+          isOpen={showShareModal}
+          onClose={() => setShowShareModal(false)}
+        />
       </div>
     </div>
   );

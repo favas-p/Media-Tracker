@@ -10,6 +10,7 @@
     "seed": "npx tsx scripts/seed.ts"
   },
   "dependencies": {
+    "@resvg/resvg-js": "^2.6.2",
     "@tanstack/react-query": "^5.56.2",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^2.5.0",
