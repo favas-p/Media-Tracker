@@ -1,9 +1,12 @@
+import { ImageResponse } from 'next/og';
 import { NextRequest } from 'next/server';
-import { Resvg } from '@resvg/resvg-js';
 import connectToDatabase from '@/lib/db';
 import Work from '@/models/Work';
 import User from '@/models/User';
 import { format } from 'date-fns';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 export async function GET(
   req: NextRequest,
@@ -25,92 +28,221 @@ export async function GET(
       return new Response('Work task not found', { status: 404 });
     }
 
-    const title = (work.title || 'Work Task').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const title = work.title || 'Work Task';
     const category = (work.category || 'task').toUpperCase();
     const priority = (work.priority || 'medium').toUpperCase();
     const status = (work.status || 'pending').replace('_', ' ').toUpperCase();
 
-    const createdByName = (work.createdBy?.name || 'Chairman').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    const assignees = ((work.assignedTo || []).map((u: any) => u.name).join(', ') || 'Team Members').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const createdByName = work.createdBy?.name || 'Chairman';
+    const assignees = (work.assignedTo || []).map((u: any) => u.name).join(', ') || 'Team Members';
     const deadlineStr = work.deadline ? format(new Date(work.deadline), 'dd MMM yyyy') : 'No Deadline';
 
     const statusBg = status === 'COMPLETED' ? '#10B981' : status === 'IN PROGRESS' ? '#2511F7' : '#F59E0B';
 
-    const svg = `<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#F4F6FF"/>
-          <stop offset="100%" stop-color="#EBEFFF"/>
-        </linearGradient>
-      </defs>
-      
-      <!-- Clean Light Theme Background -->
-      <rect width="1200" height="630" fill="url(#bg)"/>
-      <circle cx="100" cy="100" r="300" fill="#2511F7" opacity="0.06"/>
-      <circle cx="1100" cy="500" r="300" fill="#FFE600" opacity="0.12"/>
-      
-      <!-- Outer Decorative Frame -->
-      <rect x="16" y="16" width="1168" height="598" rx="32" fill="none" stroke="#2511F7" stroke-width="3" opacity="0.2"/>
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            height: '100%',
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            backgroundColor: '#F4F6FF',
+            padding: '48px',
+            fontFamily: 'sans-serif',
+            color: '#0D0647',
+            boxSizing: 'border-box',
+          }}
+        >
+          {/* Top Brand Header */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              width: '100%',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div
+                style={{
+                  width: '54px',
+                  height: '54px',
+                  borderRadius: '16px',
+                  backgroundColor: '#2511F7',
+                  color: '#FFE600',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: 900,
+                  fontSize: '22px',
+                }}
+              >
+                NM
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span
+                  style={{
+                    fontSize: '26px',
+                    fontWeight: 900,
+                    color: '#0D0647',
+                    letterSpacing: '-0.5px',
+                  }}
+                >
+                  Nusa Media
+                </span>
+                <span
+                  style={{
+                    fontSize: '13px',
+                    fontWeight: 800,
+                    color: '#2511F7',
+                    textTransform: 'uppercase',
+                    letterSpacing: '1.5px',
+                  }}
+                >
+                  MEDIA CREW 2026 • WORK ASSIGNED CARD
+                </span>
+              </div>
+            </div>
 
-      <!-- Header -->
-      <rect x="60" y="52" width="54" height="54" rx="16" fill="#2511F7"/>
-      <text x="87" y="87" font-family="sans-serif" font-size="22" font-weight="900" fill="#FFE600" text-anchor="middle">NM</text>
-      
-      <text x="130" y="78" font-family="sans-serif" font-size="26" font-weight="900" fill="#0D0647">Nusa Media</text>
-      <text x="130" y="100" font-family="sans-serif" font-size="13" font-weight="800" fill="#2511F7" letter-spacing="1.5">MEDIA CREW 2026 • WORK ASSIGNED CARD</text>
+            {/* Badges */}
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '8px 20px',
+                  borderRadius: '999px',
+                  backgroundColor: statusBg,
+                  color: '#FFFFFF',
+                  fontSize: '14px',
+                  fontWeight: 800,
+                  letterSpacing: '0.5px',
+                }}
+              >
+                {status}
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '8px 20px',
+                  borderRadius: '999px',
+                  backgroundColor: '#EEF2FF',
+                  border: '1.5px solid #C7D2FE',
+                  color: '#2511F7',
+                  fontSize: '13px',
+                  fontWeight: 800,
+                }}
+              >
+                {priority} PRIORITY
+              </div>
+            </div>
+          </div>
 
-      <!-- Status & Priority Badges -->
-      <rect x="830" y="58" width="150" height="42" rx="21" fill="${statusBg}"/>
-      <text x="905" y="84" font-family="sans-serif" font-size="14" font-weight="800" fill="#FFFFFF" text-anchor="middle">${status}</text>
+          {/* Main Clean White Card Container */}
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              backgroundColor: '#FFFFFF',
+              border: '2px solid #E2E8F0',
+              borderRadius: '28px',
+              padding: '36px',
+              gap: '20px',
+              boxShadow: '0 12px 32px rgba(13, 6, 71, 0.08)',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '6px 14px',
+                  borderRadius: '10px',
+                  backgroundColor: '#EEF2FF',
+                  border: '1px solid #C7D2FE',
+                  color: '#2511F7',
+                  fontSize: '13px',
+                  fontWeight: 800,
+                }}
+              >
+                CATEGORY: {category}
+              </div>
+            </div>
 
-      <rect x="995" y="58" width="145" height="42" rx="21" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="1.5"/>
-      <text x="1067" y="84" font-family="sans-serif" font-size="13" font-weight="800" fill="#2511F7" text-anchor="middle">${priority} PRIORITY</text>
+            <div
+              style={{
+                display: 'flex',
+                fontSize: '36px',
+                fontWeight: 900,
+                color: '#0D0647',
+                lineHeight: 1.25,
+                margin: 0,
+                letterSpacing: '-0.5px',
+              }}
+            >
+              {title.length > 50 ? title.substring(0, 47) + '...' : title}
+            </div>
 
-      <!-- Main Clean White Card Container -->
-      <rect x="60" y="135" width="1080" height="400" rx="28" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2"/>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                paddingTop: '16px',
+                borderTop: '2px solid #F1F5F9',
+              }}
+            >
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <span style={{ fontSize: '13px', color: '#64748B', fontWeight: 700 }}>
+                  👥 Assigned Member(s):
+                </span>
+                <span style={{ fontSize: '22px', color: '#0F172A', fontWeight: 800 }}>
+                  {assignees.length > 38 ? assignees.substring(0, 35) + '...' : assignees}
+                </span>
+              </div>
 
-      <!-- Category Pill -->
-      <rect x="95" y="170" width="210" height="36" rx="10" fill="#EEF2FF" stroke="#C7D2FE" stroke-width="1"/>
-      <text x="200" y="193" font-family="sans-serif" font-size="13" font-weight="800" fill="#2511F7" text-anchor="middle">CATEGORY: ${category}</text>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <span style={{ fontSize: '13px', color: '#64748B', fontWeight: 700 }}>
+                  👤 Assigned By:
+                </span>
+                <span style={{ fontSize: '20px', color: '#2511F7', fontWeight: 800 }}>
+                  {createdByName}
+                </span>
+              </div>
 
-      <!-- Title -->
-      <text x="95" y="265" font-family="sans-serif" font-size="36" font-weight="900" fill="#0D0647">${title.length > 50 ? title.substring(0, 47) + '...' : title}</text>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', textAlign: 'right' }}>
+                <span style={{ fontSize: '13px', color: '#E11D48', fontWeight: 700 }}>
+                  📅 Due Date:
+                </span>
+                <span style={{ fontSize: '22px', color: '#0F172A', fontWeight: 800 }}>
+                  {deadlineStr}
+                </span>
+              </div>
+            </div>
+          </div>
 
-      <!-- Divider line -->
-      <line x1="95" y1="350" x2="1105" y2="350" stroke="#F1F5F9" stroke-width="2"/>
-
-      <!-- Info Columns -->
-      <text x="95" y="395" font-family="sans-serif" font-size="14" font-weight="700" fill="#64748B">👥 Assigned Member(s):</text>
-      <text x="95" y="430" font-family="sans-serif" font-size="22" font-weight="800" fill="#0F172A">${assignees.length > 38 ? assignees.substring(0, 35) + '...' : assignees}</text>
-
-      <text x="560" y="395" font-family="sans-serif" font-size="14" font-weight="700" fill="#64748B">👤 Assigned By:</text>
-      <text x="560" y="430" font-family="sans-serif" font-size="20" font-weight="800" fill="#2511F7">${createdByName}</text>
-
-      <text x="920" y="395" font-family="Segoe UI, Roboto, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#E11D48">📅 Due Date:</text>
-      <text x="920" y="430" font-family="Segoe UI, Roboto, Helvetica, sans-serif" font-size="22" font-weight="800" fill="#0F172A">${deadlineStr}</text>
-
-      <!-- Footer Note -->
-      <text x="60" y="575" font-family="sans-serif" font-size="14" font-weight="600" fill="#64748B">Nusa Media Work Tracking System • 2026</text>
-      <text x="1140" y="575" font-family="sans-serif" font-size="14" font-weight="800" fill="#2511F7" text-anchor="end">🔗 Click link to view full task details &amp; progress</text>
-    </svg>`;
-
-    // Render SVG into PNG image buffer required by WhatsApp link preview crawler
-    const resvg = new Resvg(svg, {
-      fitTo: {
-        mode: 'width',
-        value: 1200,
-      },
-    });
-    const pngData = resvg.render();
-    const pngBuffer = pngData.asPng();
-
-    return new Response(new Uint8Array(pngBuffer), {
-      headers: {
-        'Content-Type': 'image/png',
-        'Content-Length': pngBuffer.length.toString(),
-        'Cache-Control': 'public, max-age=86400, s-maxage=86400',
-      },
-    });
+          {/* Footer Branding */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+            <span style={{ fontSize: '14px', color: '#64748B', fontWeight: 600 }}>
+              Nusa Media Work Tracking System • 2026
+            </span>
+            <span style={{ fontSize: '14px', color: '#2511F7', fontWeight: 800 }}>
+              🔗 Click link to view full task details & progress
+            </span>
+          </div>
+        </div>
+      ),
+      {
+        width: 1200,
+        height: 630,
+      }
+    );
   } catch (error: any) {
     console.error('OG Image Generation Error:', error);
     return new Response(`Failed to generate dynamic OG card image: ${error?.message || error}`, { status: 500 });

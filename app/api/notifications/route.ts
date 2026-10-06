@@ -3,6 +3,8 @@ import connectToDatabase from '@/lib/db';
 import Activity from '@/models/Activity';
 import { getServerUser, unauthorizedResponse } from '@/lib/auth-utils';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: NextRequest) {
   try {
     const user = await getServerUser();
